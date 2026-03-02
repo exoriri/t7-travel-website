@@ -11,7 +11,16 @@
   const originCode = ref('');
   const destinationCode = ref('');
 
-  const { airports, loading, handleAutocomplete } = useAirports();
+  const {
+    airports: originAirports,
+    loading: originLoading,
+    handleAutocomplete: handleOriginSearch,
+  } = useAirports();
+  const {
+    airports: destinationAirports,
+    loading: destinationLoading,
+    handleAutocomplete: handleDestinationSearch,
+  } = useAirports();
 
   const handleUpdateOrigin = (value: string) => {
     originCode.value = value;
@@ -26,27 +35,27 @@
     <StyledDirectionsContainer>
       <VAutocomplete
         v-model="originCode"
-        :items="Object.values(airports)"
-        :loading="loading"
+        :items="Object.values(originAirports)"
+        :loading="originLoading"
         no-data-text="Начните печатать..."
         label="Откуда"
         hide-details
         item-title="name"
         item-value="code"
-        @input="handleAutocomplete"
+        @input="handleOriginSearch"
         @update:model-value="handleUpdateOrigin"
       >
       </VAutocomplete>
       <VAutocomplete
         v-model="destinationCode"
-        :items="Object.values(airports)"
-        :loading="loading"
+        :items="Object.values(destinationAirports)"
+        :loading="destinationLoading"
         no-data-text="Начните печатать..."
         label="Куда"
         hide-details
         item-title="name"
         item-value="code"
-        @input="handleAutocomplete"
+        @input="handleDestinationSearch"
         @update:model-value="handleUpdateDestination"
       />
     </StyledDirectionsContainer>
