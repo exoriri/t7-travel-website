@@ -1,0 +1,19 @@
+schema: http://localhost:5000/graphql
+documents: 'src/**/*.graphql'
+generates:
+  src/shared/api/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-apollo
+    config:
+      vueCompositionApiImportFrom: 'vue'
+      disableTsNoCheckDirective: false
+      noExplicitAny: false
+config:
+  clientPath: 'src/shared/api/client.ts'
+  asyncQuery: true
+  skipTypename: true
+  scalars:
+    TermMap: "Record<string, Term>"
+

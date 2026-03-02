@@ -1,0 +1,13 @@
+query Airports($text: String!, $locale: String) {
+  airports(text: $text, locale: $locale) {
+    id
+    type
+    code
+    name
+    country_name
+    coordinates {
+      lat
+      lon
+    }
+  }
+}

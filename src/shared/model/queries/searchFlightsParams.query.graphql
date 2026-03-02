@@ -1,0 +1,24 @@
+query SearchFlightsParams(
+  $adults: Int!
+  $children: Int!
+  $infants: Int!
+  $locale: String!
+  $currency: String!
+  $departureDate: String!
+  $destinationLocation: String!
+  $originLocation: String!
+) {
+  searchFlightsParams(
+    adults: $adults
+    children: $children
+    infants: $infants
+    locale: $locale
+    currency: $currency
+    departureDate: $departureDate
+    destinationLocation: $destinationLocation
+    originLocation: $originLocation
+  ) {
+    searchId
+    resultsUrl
+  }
+}
