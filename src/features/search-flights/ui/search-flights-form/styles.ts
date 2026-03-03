@@ -1,9 +1,10 @@
 import styled from '@vue-styled-components/core';
+import { VCard } from 'vuetify/components';
 
 export const StyledSearchBox = styled.div`
   border-radius: 20px;
   background-color: #fff;
-  width: 80%;
+  width: 90%;
 `;
 
 export const StyledCenter = styled.div`
@@ -16,18 +17,32 @@ export const StyledCenter = styled.div`
 
 export const StyledForm = styled.form`
   display: flex;
-  gap: 5px;
+  justify-content: center;
+
+  @media (max-width: 1201px) {
+    flex-direction: column;
+  }
 `;
 
 export const StyledDirectionsContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
-  min-width: 50%;
+  width: 40%;
 `;
 
 export const StyledCalendarContainer = styled.div`
   display: flex;
-  min-width: 40%;
+  width: 30%;
 `;
 
-export const StyledFindButton = styled.button``;
+export const StyledPassangersContainer = styled.div`
+  width: 20%;
+`;
+
+export const StyledVCard = styled(VCard)`
+  padding: 10px 15px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;

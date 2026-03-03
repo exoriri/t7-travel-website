@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3",
+    "@mdi/font": "^7.4.47",
     "@vue-styled-components/core": "^1.13.3",
     "@vue/apollo-composable": "^4.2.2",
     "add": "^2.0.6",
