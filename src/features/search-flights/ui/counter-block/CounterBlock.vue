@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { StyledBtn, StyledContainer, StyledTextContainer } from './styles';
-
   interface Props {
     title: string;
     subtitle?: string;
@@ -13,16 +11,47 @@
 </script>
 
 <template>
-  <StyledContainer>
-    <StyledBtn :disabled="disableSubtract" @click="onSubtract">
+  <div class="container">
+    <VBtn :disabled="disableSubtract" class="btn" @click="onSubtract">
       <VIcon color="#fff">mdi-minus-thick</VIcon>
-    </StyledBtn>
-    <StyledTextContainer>
+    </VBtn>
+    <div class="text-container">
       <h2>{{ title }}</h2>
       <p v-if="subtitle">{{ subtitle }}</p>
-    </StyledTextContainer>
-    <StyledBtn @click="onAdd">
+    </div>
+    <VBtn class="btn" @click="onAdd">
       <VIcon color="#fff">mdi-plus-thick</VIcon>
-    </StyledBtn>
-  </StyledContainer>
+    </VBtn>
+  </div>
 </template>
+
+<style scoped lang="scss">
+  $COUNTER_BTN_SIZE: 50px;
+
+  .container {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+  }
+
+  .btn {
+    background-color: #5352ee;
+    max-width: $COUNTER_BTN_SIZE;
+    min-width: $COUNTER_BTN_SIZE;
+    max-height: $COUNTER_BTN_SIZE;
+    min-height: $COUNTER_BTN_SIZE;
+    border-radius: 10px;
+
+    &:disabled {
+      background-color: #a8a8f6;
+    }
+  }
+
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+</style>

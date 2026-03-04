@@ -13,7 +13,6 @@
   "dependencies": {
     "@apollo/client": "^3",
     "@mdi/font": "^7.4.47",
-    "@vue-styled-components/core": "^1.13.3",
     "@vue/apollo-composable": "^4.2.2",
     "add": "^2.0.6",
     "graphql": "^16.13.0",
@@ -35,6 +34,8 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-vue": "^10.8.0",
     "prettier": "^3.8.1",
+    "sass": "^1.97.3",
+    "sass-loader": "^16.0.7",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
     "vite-plugin-vuetify": "^2.1.3",

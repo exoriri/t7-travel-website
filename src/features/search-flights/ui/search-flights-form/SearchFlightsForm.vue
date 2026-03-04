@@ -1,16 +1,7 @@
 <script setup lang="ts">
   import { useAirports } from '@/entities/flights/api/useAirports';
+  import { VDateInput } from 'vuetify/labs/VDateInput';
 
-  import {
-    StyledForm,
-    StyledDirectionsContainer,
-    StyledCalendarContainer,
-    StyledPassangersContainer,
-    StyledVCard,
-    StyledSearchButton,
-    StyledMenuButton,
-    StyledLocationAutocomplete,
-  } from './styles';
   import { CounterBlock } from '../counter-block';
   import { useSearch } from '@/entities/flights/api/useSearch';
   import {
@@ -87,10 +78,11 @@
 </script>
 
 <template>
-  <StyledForm>
-    <StyledDirectionsContainer>
-      <StyledLocationAutocomplete
+  <div class="form">
+    <div class="direction-container">
+      <VAutocomplete
         v-model="originCode"
+        class="location-autocomplete"
         :items="Object.values(originAirports)"
         :loading="originLoading"
         no-data-text="Начните печатать..."
@@ -104,8 +96,9 @@
         @input="handleOriginSearch"
         @update:model-value="handleUpdateOrigin"
       />
-      <StyledLocationAutocomplete
+      <VAutocomplete
         v-model="destinationCode"
+        class="location-autocomplete"
         :items="Object.values(destinationAirports)"
         :loading="destinationLoading"
         no-data-text="Начните печатать..."
@@ -119,8 +112,8 @@
         @input="handleDestinationSearch"
         @update:model-value="handleUpdateDestination"
       />
-    </StyledDirectionsContainer>
-    <StyledCalendarContainer>
+    </div>
+    <div class="calendar-container">
       <VDateInput
         v-model="departureDate"
         prepend-icon=""
@@ -137,11 +130,12 @@
         width="100%"
         label="Дата прилета"
       />
-    </StyledCalendarContainer>
-    <StyledPassangersContainer>
+    </div>
+    <div class="passengers-container">
       <VMenu v-model="menu" :close-on-content-click="false">
         <template #activator="{ props }">
-          <StyledMenuButton
+          <VBtn
+            class="menu-btn"
             v-bind="props"
             :ripple="false"
             prepend-icon="mdi-account"
@@ -149,9 +143,9 @@
             height="100%"
           >
             {{ totalPassengers }} пас, эконом
-          </StyledMenuButton>
+          </VBtn>
         </template>
-        <StyledVCard>
+        <VCard class="card">
           <CounterBlock
             title="Взрослые"
             subtitle=">12 лет"
@@ -159,11 +153,72 @@
             :on-add="addAdults"
             :on-subtract="subtractAdults"
           />
-          <CounterBlock title="Дети" subtitle="2-12 лет" />
-          <CounterBlock title="Младенцы" subtitle="<2 лет" />
-        </StyledVCard>
+          <CounterBlock
+            title="Дети"
+            subtitle="2-12 лет"
+            :disable-subtract="passengers.children === 0"
+          />
+          <CounterBlock
+            title="Младенцы"
+            subtitle="<2 лет"
+            :disable-subtract="passengers.infants === 0"
+          />
+        </VCard>
       </VMenu>
-    </StyledPassangersContainer>
-    <StyledSearchButton @click="handleSearch">Найти</StyledSearchButton>
-  </StyledForm>
+    </div>
+    <VBtn class="search-btn" @click="handleSearch">Найти</VBtn>
+  </div>
 </template>
+
+<style scoped lang="scss">
+  .form {
+    display: flex;
+    justify-content: center;
+
+    @include down('lg') {
+      flex-direction: column;
+    }
+  }
+
+  .direction-container {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 40%;
+  }
+
+  .location-autocomplete {
+    width: 50%;
+    max-width: 50%;
+  }
+
+  .calendar-container {
+    display: flex;
+    width: 30%;
+  }
+
+  .passengers-container {
+    width: 20%;
+  }
+
+  .card {
+    padding: 10px 15px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .menu-btn {
+    width: 100%;
+  }
+
+  .search-btn {
+    height: auto !important;
+    background-color: #5352ee;
+    color: #fff;
+  }
+
+  .menu-btn {
+    width: 100%;
+  }
+</style>

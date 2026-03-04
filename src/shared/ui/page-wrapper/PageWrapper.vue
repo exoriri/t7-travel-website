@@ -1,9 +1,17 @@
-<script setup lang="ts">
-  import { StyledWrapper } from './styles';
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <StyledWrapper>
+  <div class="wrapper">
     <slot />
-  </StyledWrapper>
+  </div>
 </template>
+
+<style scoped>
+  .wrapper {
+    background-color: #f1ece8;
+    width: 100%;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+  }
+</style>

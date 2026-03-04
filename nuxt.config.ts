@@ -32,6 +32,16 @@ export default defineNuxtConfig({
         autoImport: true,
       }),
     ],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `
+            @use "@/assets/css/variables.scss" as *;
+            @use "@/assets/css/mixins.scss" as *;
+          `,
+        },
+      },
+    },
   },
   modules: [
     async (_options, nuxt) => {

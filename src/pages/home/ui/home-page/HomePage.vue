@@ -8,3 +8,5 @@
     <SearchFlightsForm />
   </PageWrapper>
 </template>
+
+<style scoped></style>
