@@ -1,5 +1,6 @@
 import styled from '@vue-styled-components/core';
-import { VCard } from 'vuetify/components';
+import { VAutocomplete, VBtn, VCard } from 'vuetify/components';
+import { mediaQuery } from '@/shared/styles/breakpoints';
 
 export const StyledSearchBox = styled.div`
   border-radius: 20px;
@@ -19,7 +20,7 @@ export const StyledForm = styled.form`
   display: flex;
   justify-content: center;
 
-  @media (max-width: 1201px) {
+  ${mediaQuery('down', 'lg')} {
     flex-direction: column;
   }
 `;
@@ -36,7 +37,7 @@ export const StyledCalendarContainer = styled.div`
 `;
 
 export const StyledPassangersContainer = styled.div`
-  width: 20%;
+  width: 15%;
 `;
 
 export const StyledVCard = styled(VCard)`
@@ -45,4 +46,19 @@ export const StyledVCard = styled(VCard)`
   display: flex;
   flex-direction: column;
   gap: 15px;
+`;
+
+export const StyledMenuButton = styled(VBtn)`
+  width: 100%;
+`;
+
+export const StyledSearchButton = styled(VBtn)`
+  height: auto !important;
+  background-color: #5352ee;
+  color: #fff;
+`;
+
+export const StyledLocationAutocomplete = styled(VAutocomplete)`
+  width: 50%;
+  max-width: 50%;
 `;

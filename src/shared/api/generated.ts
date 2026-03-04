@@ -443,7 +443,7 @@ export type QuerySearchFlightsParamsArgs = {
   locale: Scalars['String']['input'];
   originLocation: Scalars['String']['input'];
   returnDate?: InputMaybe<Scalars['String']['input']>;
-  travelClass?: InputMaybe<Scalars['String']['input']>;
+  travelClass: TripClass;
 };
 
 export type ReturnFlight = {
@@ -452,13 +452,12 @@ export type ReturnFlight = {
 
 export type SearchId = {
   resultsUrl: Scalars['String']['output'];
-  searchId?: Maybe<Scalars['String']['output']>;
+  searchId: Scalars['String']['output'];
 };
 
 export type SearchParams = {
   passengers: Scalars['Passangers']['output'];
-  source_kind: Scalars['String']['output'];
-  trip_class: Scalars['String']['output'];
+  trip_class: TripClass;
 };
 
 export type SimpleResponse = {
@@ -497,6 +496,13 @@ export type TravelDestination = {
   status?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
 };
+
+export enum TripClass {
+  Business = 'BUSINESS',
+  Comfort = 'COMFORT',
+  Economy = 'ECONOMY',
+  First = 'FIRST'
+}
 
 export type User = {
   _id?: Maybe<Scalars['String']['output']>;
@@ -539,10 +545,12 @@ export type SearchFlightsParamsQueryVariables = Exact<{
   departureDate: Scalars['String']['input'];
   destinationLocation: Scalars['String']['input'];
   originLocation: Scalars['String']['input'];
+  travelClass: TripClass;
+  returnDate?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type SearchFlightsParamsQuery = { searchFlightsParams?: { searchId?: string | null, resultsUrl: string } | null };
+export type SearchFlightsParamsQuery = { searchFlightsParams?: { searchId: string, resultsUrl: string } | null };
 
 
 export const AirportsDocument = gql`
@@ -585,7 +593,7 @@ export function useAirportsLazyQuery(variables?: AirportsQueryVariables | VueCom
 }
 export type AirportsQueryCompositionFunctionResult = VueApolloComposable.UseQueryReturn<AirportsQuery, AirportsQueryVariables>;
 export const SearchFlightsParamsDocument = gql`
-    query SearchFlightsParams($adults: Int!, $children: Int!, $infants: Int!, $locale: String!, $currency: String!, $departureDate: String!, $destinationLocation: String!, $originLocation: String!) {
+    query SearchFlightsParams($adults: Int!, $children: Int!, $infants: Int!, $locale: String!, $currency: String!, $departureDate: String!, $destinationLocation: String!, $originLocation: String!, $travelClass: TripClass!, $returnDate: String) {
   searchFlightsParams(
     adults: $adults
     children: $children
@@ -595,6 +603,8 @@ export const SearchFlightsParamsDocument = gql`
     departureDate: $departureDate
     destinationLocation: $destinationLocation
     originLocation: $originLocation
+    travelClass: $travelClass
+    returnDate: $returnDate
   ) {
     searchId
     resultsUrl
@@ -622,6 +632,8 @@ export const SearchFlightsParamsDocument = gql`
  *   departureDate: // value for 'departureDate'
  *   destinationLocation: // value for 'destinationLocation'
  *   originLocation: // value for 'originLocation'
+ *   travelClass: // value for 'travelClass'
+ *   returnDate: // value for 'returnDate'
  * });
  */
 export function useSearchFlightsParamsQuery(variables: SearchFlightsParamsQueryVariables | VueCompositionApi.Ref<SearchFlightsParamsQueryVariables> | ReactiveFunction<SearchFlightsParamsQueryVariables>, options: VueApolloComposable.UseQueryOptions<SearchFlightsParamsQuery, SearchFlightsParamsQueryVariables> | VueCompositionApi.Ref<VueApolloComposable.UseQueryOptions<SearchFlightsParamsQuery, SearchFlightsParamsQueryVariables>> | ReactiveFunction<VueApolloComposable.UseQueryOptions<SearchFlightsParamsQuery, SearchFlightsParamsQueryVariables>> = {}) {

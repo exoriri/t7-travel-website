@@ -4,6 +4,7 @@
   interface Props {
     title: string;
     subtitle?: string;
+    disableSubtract?: boolean;
     onAdd?: () => void;
     onSubtract?: () => void;
   }
@@ -13,7 +14,7 @@
 
 <template>
   <StyledContainer>
-    <StyledBtn @click="onSubtract">
+    <StyledBtn :disabled="disableSubtract" @click="onSubtract">
       <VIcon color="#fff">mdi-minus-thick</VIcon>
     </StyledBtn>
     <StyledTextContainer>

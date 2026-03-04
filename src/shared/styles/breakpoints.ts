@@ -4,7 +4,7 @@ interface Breakpoints {
 }
 
 const breakpoints: Breakpoints = {
-  lg: 1200,
+  lg: 900,
 };
 
 export const mediaQuery = (type: Variant, bp: keyof typeof breakpoints) => {
