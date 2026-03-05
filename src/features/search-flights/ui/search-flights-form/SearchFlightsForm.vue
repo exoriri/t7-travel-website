@@ -1,16 +1,17 @@
 <script setup lang="ts">
   import { useAirports } from '@/entities/flights/api/useAirports';
   import { VDateInput } from 'vuetify/labs/VDateInput';
+  import dayjs from 'dayjs';
 
   import { CounterBlock } from '../counter-block';
   import { useSearch } from '@/entities/flights/api/useSearch';
   import {
     type SearchFlightsParamsQueryVariables,
     TripClass,
-  } from '~/shared/api/generated';
+  } from '@/shared/api/generated';
 
-  const originCode = ref('');
-  const destinationCode = ref('');
+  const originCode = ref<string | null>(null);
+  const destinationCode = ref<string | null>(null);
   const menu = ref(false);
   const departureDate = ref<string | null>(null);
   const returnDate = ref<string | null>(null);
@@ -24,10 +25,13 @@
   const totalPassengers = computed(
     () => passengers.adults + passengers.children + passengers.infants
   );
+
+  const returnDateIntputRef = ref<InstanceType<typeof VDateInput>>();
+
   const body = computed<SearchFlightsParamsQueryVariables>(() => ({
     ...passengers,
-    originLocation: originCode.value,
-    destinationLocation: destinationCode.value,
+    originLocation: originCode.value ?? '',
+    destinationLocation: destinationCode.value ?? '',
     departureDate: departureDate.value as string,
     returnDate: returnDate.value,
     locale: 'ru',
@@ -54,19 +58,43 @@
     destinationCode.value = value;
   };
 
-  const add = (personType: keyof typeof passengers) => () => {
+  const add = (personType: keyof typeof passengers) => {
     passengers[personType] += 1;
   };
-  const substract = (personType: keyof typeof passengers) => () => {
+  const subtract = (personType: keyof typeof passengers) => {
     if (personType === 'adults' && passengers[personType] === 1) return;
     passengers[personType] -= 1;
   };
 
-  const addAdults = add('adults');
-  const subtractAdults = substract('adults');
+  const today = dayjs(new Date().toDateString()).valueOf();
+
+  const disabledPastDates = (date: unknown) => {
+    const calendarDate = dayjs(date as Date).valueOf();
+    return calendarDate >= today;
+  };
+
+  const allowedReturnDates = (date: unknown) => {
+    const calendarDateMilliseconds = dayjs(date as Date).valueOf();
+    const pastDatesDisabled = disabledPastDates(date);
+
+    if (!departureDate.value) {
+      return pastDatesDisabled;
+    }
+
+    const departureMilliseconds = dayjs(departureDate.value).valueOf();
+    return (
+      pastDatesDisabled && calendarDateMilliseconds >= departureMilliseconds
+    );
+  };
 
   const handleSearch = () => {
     search(body.value);
+  };
+
+  const updateAfterDepartureSelected = () => {
+    returnDate.value = '';
+    returnDateIntputRef?.value?.focus();
+    returnDateIntputRef?.value?.click();
   };
 
   watch(searchFlightParamsResponse, (response) => {
@@ -116,14 +144,18 @@
     <div class="calendar-container">
       <VDateInput
         v-model="departureDate"
+        :allowed-dates="disabledPastDates"
         prepend-icon=""
         hide-details
         prepend-inner-icon="$calendar"
         width="100%"
         label="Дата вылета"
+        @update:model-value="updateAfterDepartureSelected"
       />
       <VDateInput
+        ref="returnDateIntputRef"
         v-model="returnDate"
+        :allowed-dates="allowedReturnDates"
         prepend-icon=""
         hide-details
         prepend-inner-icon="$calendar"
@@ -147,21 +179,25 @@
         </template>
         <VCard class="card">
           <CounterBlock
-            title="Взрослые"
+            :title="`${passengers.adults} Взрослые`"
             subtitle=">12 лет"
             :disable-subtract="passengers.adults === 1"
-            :on-add="addAdults"
-            :on-subtract="subtractAdults"
+            :on-add="() => add('adults')"
+            :on-subtract="() => subtract('adults')"
           />
           <CounterBlock
-            title="Дети"
+            :title="`${passengers.children} Дети`"
             subtitle="2-12 лет"
             :disable-subtract="passengers.children === 0"
+            :on-add="() => add('children')"
+            :on-subtract="() => subtract('children')"
           />
           <CounterBlock
-            title="Младенцы"
+            :title="`${passengers.infants} Младенцы`"
             subtitle="<2 лет"
             :disable-subtract="passengers.infants === 0"
+            :on-add="() => add('infants')"
+            :on-subtract="() => subtract('infants')"
           />
         </VCard>
       </VMenu>
