@@ -1,7 +1,6 @@
 import { resolve } from 'path';
 import vuetify from 'vite-plugin-vuetify';
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -12,6 +11,7 @@ export default defineNuxtConfig({
   },
   dir: {
     pages: 'app/routes',
+    plugins: 'app/plugins',
   },
   css: ['@/assets/css/main.css', 'vuetify/styles'],
   build: {
@@ -47,5 +47,11 @@ export default defineNuxtConfig({
     async (_options, nuxt) => {
       nuxt.hook('vite:extendConfig', (_config) => {});
     },
+    '@nuxtjs/i18n',
   ],
+  i18n: {
+    restructureDir: 'src/shared/i18n',
+    defaultLocale: 'ru',
+    locales: [{ code: 'ru', name: 'Russian', files: ['ru/home.json'] }],
+  },
 });

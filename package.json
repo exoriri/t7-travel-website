@@ -13,6 +13,7 @@
   "dependencies": {
     "@apollo/client": "^3",
     "@mdi/font": "^7.4.47",
+    "@nuxtjs/i18n": "^10.2.3",
     "@vue/apollo-composable": "^4.2.2",
     "add": "^2.0.6",
     "dayjs": "^1.11.19",

@@ -4,6 +4,7 @@
   import dayjs from 'dayjs';
 
   import { CounterBlock } from '../counter-block';
+  import { useTranslate } from '@/shared/i18n/useTranslate';
   import { useSearch } from '@/entities/flights/api/useSearch';
   import {
     type SearchFlightsParamsQueryVariables,
@@ -38,6 +39,8 @@
     currency: 'rub',
     travelClass: travelClass.value,
   }));
+
+  const { t } = useTranslate();
 
   const {
     airports: originAirports,
@@ -114,7 +117,7 @@
         :items="Object.values(originAirports)"
         :loading="originLoading"
         no-data-text="Начните печатать..."
-        label="Откуда"
+        :label="t('FROM')"
         placeholder="Откуда"
         hide-details
         menu-icon=""
