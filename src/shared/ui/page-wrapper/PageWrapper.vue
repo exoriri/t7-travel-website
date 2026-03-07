@@ -14,4 +14,8 @@
     padding: 0;
     margin: 0;
   }
+  .centered {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
 </style>

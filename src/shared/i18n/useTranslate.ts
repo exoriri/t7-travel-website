@@ -1,10 +1,5 @@
 import { useI18n as useVueI18n } from 'vue-i18n';
-
-import homeRu from './locales/ru/home.json';
-
-type HomeRu = keyof typeof homeRu;
-
-type Locales = HomeRu & {};
+import type { Locales } from './types';
 
 export const useTranslate = () => {
   const i18n = useVueI18n();

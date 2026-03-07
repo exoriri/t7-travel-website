@@ -11,6 +11,7 @@
   } from '@/shared/api/generated';
   import MenuSearchOptions from '~/entities/search-flights/ui/menu-search-options/MenuSearchOptions.vue';
   import type { EventWithTarget } from '~/shared/types';
+  import { TRAVEL_CLASS_TRANSLATIONS_MAP } from '../../constants';
 
   const originCode = ref<string | null>(null);
   const destinationCode = ref<string | null>(null);
@@ -100,14 +101,17 @@
 
   const updateAfterDepartureSelected = () => {
     returnDate.value = '';
-    returnDateIntputRef?.value?.focus();
     returnDateIntputRef?.value?.click();
+
+    // Don't remove otherwise there is a bug departure date field
+    setTimeout(() => {
+      returnDateIntputRef?.value?.focus();
+    }, 0);
   };
 
   watch(searchFlightParamsResponse, (response) => {
     console.log(response);
   });
-
 </script>
 
 <template>
@@ -115,7 +119,7 @@
     <div class="direction-container">
       <VAutocomplete
         v-model="originCode"
-        class="location-autocomplete"
+        class="location-autocomplete form-input"
         :items="Object.values(originAirports)"
         :loading="originLoading"
         :no-data-text="t('START_TYPING')"
@@ -131,7 +135,7 @@
       />
       <VAutocomplete
         v-model="destinationCode"
-        class="location-autocomplete"
+        class="location-autocomplete form-input"
         :items="Object.values(destinationAirports)"
         :loading="destinationLoading"
         :no-data-text="t('START_TYPING')"
@@ -149,6 +153,7 @@
     <div class="calendar-container">
       <VDateInput
         v-model="departureDate"
+        class="form-input"
         :allowed-dates="disabledPastDates"
         prepend-icon=""
         hide-details
@@ -160,6 +165,7 @@
       <VDateInput
         ref="returnDateIntputRef"
         v-model="returnDate"
+        class="form-input"
         :allowed-dates="allowedReturnDates"
         prepend-icon=""
         hide-details
@@ -172,14 +178,15 @@
       <VMenu v-model="menu" :close-on-content-click="false">
         <template #activator="{ props }">
           <VBtn
-            class="menu-btn"
+            class="menu-btn form-input"
             v-bind="props"
             :ripple="false"
             prepend-icon="mdi-account"
             :append-icon="menu === true ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             height="100%"
           >
-            {{ totalPassengers }} пас, эконом
+            {{ totalPassengers }} пас,
+            {{ t(TRAVEL_CLASS_TRANSLATIONS_MAP[travelClass]) }}
           </VBtn>
         </template>
         <MenuSearchOptions
@@ -211,6 +218,11 @@
     }
   }
 
+  .form-input {
+    background: rgb(255, 255, 255);
+    // border-bottom: 0.1px solid #000;
+  }
+
   .direction-container {
     display: flex;
     flex-wrap: nowrap;
@@ -228,7 +240,8 @@
   }
 
   .passengers-container {
-    width: 20%;
+    width: 230px;
+    max-width: 230px;
   }
 
   .menu-btn {
