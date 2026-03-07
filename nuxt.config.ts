@@ -53,5 +53,6 @@ export default defineNuxtConfig({
     restructureDir: 'src/shared/i18n',
     defaultLocale: 'ru',
     locales: [{ code: 'ru', name: 'Russian', files: ['ru/home.json'] }],
+    strategy: 'prefix_except_default',
   },
 });

@@ -1,15 +1,16 @@
 <script setup lang="ts">
-  import { useAirports } from '@/entities/flights/api/useAirports';
+  import { useAirports } from '~/entities/search-flights/api/useAirports';
   import { VDateInput } from 'vuetify/labs/VDateInput';
   import dayjs from 'dayjs';
 
-  import { CounterBlock } from '../counter-block';
   import { useTranslate } from '@/shared/i18n/useTranslate';
-  import { useSearch } from '@/entities/flights/api/useSearch';
+  import { useSearch } from '~/entities/search-flights/api/useSearch';
   import {
     type SearchFlightsParamsQueryVariables,
     TripClass,
   } from '@/shared/api/generated';
+  import MenuSearchOptions from '~/entities/search-flights/ui/menu-search-options/MenuSearchOptions.vue';
+  import type { EventWithTarget } from '~/shared/types';
 
   const originCode = ref<string | null>(null);
   const destinationCode = ref<string | null>(null);
@@ -60,6 +61,9 @@
   const handleUpdateDestination = (value: string) => {
     destinationCode.value = value;
   };
+  const handleTravelClassChange = (e: EventWithTarget<HTMLInputElement>) => {
+    travelClass.value = e.target.value as TripClass;
+  };
 
   const add = (personType: keyof typeof passengers) => {
     passengers[personType] += 1;
@@ -103,9 +107,7 @@
   watch(searchFlightParamsResponse, (response) => {
     console.log(response);
   });
-  watch(departureDate, (val) => {
-    console.log(val);
-  });
+
 </script>
 
 <template>
@@ -116,9 +118,9 @@
         class="location-autocomplete"
         :items="Object.values(originAirports)"
         :loading="originLoading"
-        no-data-text="Начните печатать..."
+        :no-data-text="t('START_TYPING')"
         :label="t('FROM')"
-        placeholder="Откуда"
+        :placeholder="t('FROM')"
         hide-details
         menu-icon=""
         item-title="name"
@@ -132,9 +134,9 @@
         class="location-autocomplete"
         :items="Object.values(destinationAirports)"
         :loading="destinationLoading"
-        no-data-text="Начните печатать..."
-        label="Куда"
-        placeholder="Куда"
+        :no-data-text="t('START_TYPING')"
+        :label="t('WHERE')"
+        :placeholder="t('WHERE')"
         hide-details
         menu-icon=""
         item-title="name"
@@ -152,7 +154,7 @@
         hide-details
         prepend-inner-icon="$calendar"
         width="100%"
-        label="Дата вылета"
+        :label="t('DEPARTURE_DATE')"
         @update:model-value="updateAfterDepartureSelected"
       />
       <VDateInput
@@ -163,7 +165,7 @@
         hide-details
         prepend-inner-icon="$calendar"
         width="100%"
-        label="Дата прилета"
+        :label="t('RETURN_DATE')"
       />
     </div>
     <div class="passengers-container">
@@ -180,29 +182,19 @@
             {{ totalPassengers }} пас, эконом
           </VBtn>
         </template>
-        <VCard class="card">
-          <CounterBlock
-            :title="`${passengers.adults} Взрослые`"
-            subtitle=">12 лет"
-            :disable-subtract="passengers.adults === 1"
-            :on-add="() => add('adults')"
-            :on-subtract="() => subtract('adults')"
-          />
-          <CounterBlock
-            :title="`${passengers.children} Дети`"
-            subtitle="2-12 лет"
-            :disable-subtract="passengers.children === 0"
-            :on-add="() => add('children')"
-            :on-subtract="() => subtract('children')"
-          />
-          <CounterBlock
-            :title="`${passengers.infants} Младенцы`"
-            subtitle="<2 лет"
-            :disable-subtract="passengers.infants === 0"
-            :on-add="() => add('infants')"
-            :on-subtract="() => subtract('infants')"
-          />
-        </VCard>
+        <MenuSearchOptions
+          :adults="passengers.adults"
+          :children="passengers.children"
+          :infants="passengers.infants"
+          :travel-class="travelClass"
+          :on-input="handleTravelClassChange"
+          :add-adults="() => add('adults')"
+          :subtract-adults="() => subtract('adults')"
+          :add-children="() => add('children')"
+          :subtract-children="() => subtract('children')"
+          :add-infants="() => add('infants')"
+          :subtract-infants="() => subtract('infants')"
+        />
       </VMenu>
     </div>
     <VBtn class="search-btn" @click="handleSearch">Найти</VBtn>
@@ -237,14 +229,6 @@
 
   .passengers-container {
     width: 20%;
-  }
-
-  .card {
-    padding: 10px 15px;
-    min-width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
   }
 
   .menu-btn {

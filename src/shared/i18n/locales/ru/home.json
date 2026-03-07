@@ -3,5 +3,16 @@
   "DEPARTURE_DATE": "Дата вылета",
   "RETURN_DATE": "Дата прилета",
   "FROM": "Откуда",
-  "WHERE": "Куда"
+  "WHERE": "Куда",
+  "START_TYPING": "Начните печатать...",
+  "ADULTS_COUNT": "0 взрослых | {count} взрослый | {count} взрослых | {count} взрослых",
+  "CHILDREN_COUNT": "0 детей | {count} ребенок | {count} ребенка | {count} детей",
+  "INFANTS_COUNT": "0 младенцев | {count} младенец | {count} младенца | {count} младенцев",
+  "ECONOMY": "Эконом",
+  "BUSINESS": "Бизнес",
+  "COMFORT": "Комфорт",
+  "FIRST": "Первый",
+  "YEARS": "Лет",
+  "PASSANGERS": "Пассажиры",
+  "SERVICE_CLASS": "Класс обслуживания"
 }

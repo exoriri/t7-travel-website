@@ -17,7 +17,7 @@
     </VBtn>
     <div class="text-container">
       <h2>{{ title }}</h2>
-      <p v-if="subtitle">{{ subtitle }}</p>
+      <p v-if="subtitle" class="counter-subtitle">{{ subtitle }}</p>
     </div>
     <VBtn class="btn" @click="onAdd">
       <VIcon color="#fff">mdi-plus-thick</VIcon>
@@ -53,5 +53,11 @@
     align-items: center;
     justify-content: center;
     gap: 3px;
+  }
+
+  .counter-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: #979797;
   }
 </style>
