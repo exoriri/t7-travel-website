@@ -107,7 +107,6 @@
         locale: 'ru',
         currency: 'RUB',
       };
-      console.log(body);
       search(body);
     },
     (error) => {
@@ -189,6 +188,7 @@
         :allowed-dates="allowedReturnDates"
         prepend-icon=""
         hide-details
+        clearable
         prepend-inner-icon="$calendar"
         width="100%"
         :label="t('RETURN_DATE')"
@@ -205,7 +205,7 @@
             :append-icon="menu === true ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             height="100%"
           >
-            {{ totalPassengers }} пас,
+            {{ totalPassengers }} {{ t('PAX') }},
             {{ t(TRAVEL_CLASS_TRANSLATIONS_MAP[travelClass]) }}
           </VBtn>
         </template>
@@ -224,7 +224,7 @@
         />
       </VMenu>
     </div>
-    <VBtn type="submit" class="search-btn">Найти</VBtn>
+    <VBtn type="submit" class="search-btn">{{ t('SEARCH') }}</VBtn>
   </form>
 </template>
 
@@ -240,7 +240,6 @@
 
   .form-input {
     background: rgb(255, 255, 255);
-    // border-bottom: 0.1px solid #000;
   }
 
   .direction-container {
