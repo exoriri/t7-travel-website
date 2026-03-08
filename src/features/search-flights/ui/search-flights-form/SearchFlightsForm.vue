@@ -6,17 +6,16 @@
   import { useTranslate } from '@/shared/i18n/useTranslate';
   import { useSearch } from '~/entities/search-flights/api/useSearch';
   import {
-    type SearchFlightsParamsQueryVariables,
     TripClass,
+    type SearchFlightsParamsQueryVariables,
   } from '@/shared/api/generated';
   import MenuSearchOptions from '~/entities/search-flights/ui/menu-search-options/MenuSearchOptions.vue';
-  import type { EventWithTarget } from '~/shared/types';
+  import { DateFormats, type EventWithTarget } from '~/shared/types';
   import { TRAVEL_CLASS_TRANSLATIONS_MAP } from '../../constants';
+  import { useValidationSchema } from '~/entities/search-flights/model/useValidationSchema';
+  import { useField, useForm } from 'vee-validate';
 
-  const originCode = ref<string | null>(null);
-  const destinationCode = ref<string | null>(null);
   const menu = ref(false);
-  const departureDate = ref<string | null>(null);
   const returnDate = ref<string | null>(null);
   const passengers = reactive({
     adults: 1,
@@ -31,17 +30,6 @@
 
   const returnDateIntputRef = ref<InstanceType<typeof VDateInput>>();
 
-  const body = computed<SearchFlightsParamsQueryVariables>(() => ({
-    ...passengers,
-    originLocation: originCode.value ?? '',
-    destinationLocation: destinationCode.value ?? '',
-    departureDate: departureDate.value as string,
-    returnDate: returnDate.value,
-    locale: 'ru',
-    currency: 'rub',
-    travelClass: travelClass.value,
-  }));
-
   const { t } = useTranslate();
 
   const {
@@ -55,13 +43,19 @@
     handleAutocomplete: handleDestinationSearch,
   } = useAirports();
   const { data: searchFlightParamsResponse, search } = useSearch();
+  const validationSchema = useValidationSchema();
+  const { handleSubmit } = useForm({
+    validationSchema,
+  });
+  const { value: originCode, errorMessage: originCodeError } = useField<
+    string | null
+  >('originCode');
+  const { value: destinationCode, errorMessage: destinationCodeError } =
+    useField<string | null>('destinationCode');
+  const { value: departureDate, errorMessage: departureDateError } = useField<
+    string | null
+  >('departureDate');
 
-  const handleUpdateOrigin = (value: string) => {
-    originCode.value = value;
-  };
-  const handleUpdateDestination = (value: string) => {
-    destinationCode.value = value;
-  };
   const handleTravelClassChange = (e: EventWithTarget<HTMLInputElement>) => {
     travelClass.value = e.target.value as TripClass;
   };
@@ -95,9 +89,31 @@
     );
   };
 
-  const handleSearch = () => {
-    search(body.value);
-  };
+  const handleSearch = handleSubmit(
+    (values) => {
+      const body: SearchFlightsParamsQueryVariables = {
+        adults: passengers.adults,
+        children: passengers.children,
+        infants: passengers.infants,
+        originLocation: values.originCode as unknown as string,
+        destinationLocation: values.destinationCode as unknown as string,
+        departureDate: dayjs(values.departureDate as unknown as Date).format(
+          DateFormats.IsoDate
+        ),
+        returnDate: returnDate.value
+          ? dayjs(returnDate.value).format(DateFormats.IsoDate)
+          : undefined,
+        travelClass: travelClass.value,
+        locale: 'ru',
+        currency: 'RUB',
+      };
+      console.log(body);
+      search(body);
+    },
+    (error) => {
+      console.log(error, 'errrors');
+    }
+  );
 
   const updateAfterDepartureSelected = () => {
     returnDate.value = '';
@@ -115,27 +131,31 @@
 </script>
 
 <template>
-  <div class="form">
+  <form class="form" @submit.prevent="handleSearch">
     <div class="direction-container">
       <VAutocomplete
         v-model="originCode"
+        name="originCode"
         class="location-autocomplete form-input"
+        hide-details
+        :error-messages="originCodeError"
         :items="Object.values(originAirports)"
         :loading="originLoading"
         :no-data-text="t('START_TYPING')"
         :label="t('FROM')"
         :placeholder="t('FROM')"
-        hide-details
         menu-icon=""
         item-title="name"
         item-value="code"
         clearable
         @input="handleOriginSearch"
-        @update:model-value="handleUpdateOrigin"
       />
+
       <VAutocomplete
         v-model="destinationCode"
         class="location-autocomplete form-input"
+        name="destinationCode"
+        :error-messages="destinationCodeError"
         :items="Object.values(destinationAirports)"
         :loading="destinationLoading"
         :no-data-text="t('START_TYPING')"
@@ -147,13 +167,13 @@
         item-value="code"
         clearable
         @input="handleDestinationSearch"
-        @update:model-value="handleUpdateDestination"
       />
     </div>
     <div class="calendar-container">
       <VDateInput
         v-model="departureDate"
         class="form-input"
+        :error-messages="departureDateError"
         :allowed-dates="disabledPastDates"
         prepend-icon=""
         hide-details
@@ -204,8 +224,8 @@
         />
       </VMenu>
     </div>
-    <VBtn class="search-btn" @click="handleSearch">Найти</VBtn>
-  </div>
+    <VBtn type="submit" class="search-btn">Найти</VBtn>
+  </form>
 </template>
 
 <style scoped lang="scss">

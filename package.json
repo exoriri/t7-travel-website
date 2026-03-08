@@ -14,6 +14,7 @@
     "@apollo/client": "^3",
     "@mdi/font": "^7.4.47",
     "@nuxtjs/i18n": "^10.2.3",
+    "@vee-validate/zod": "^4.15.1",
     "@vue/apollo-composable": "^4.2.2",
     "add": "^2.0.6",
     "dayjs": "^1.11.19",
@@ -23,9 +24,11 @@
     "i18next-vue": "^5.4.0",
     "nuxt": "^4.3.0",
     "rxjs": "^7.8.2",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^6.1.2",
