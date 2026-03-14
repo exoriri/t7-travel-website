@@ -13,7 +13,7 @@
 
 <style scoped>
   .imaged-bg {
-    height: 35%;
+    height: 50%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;

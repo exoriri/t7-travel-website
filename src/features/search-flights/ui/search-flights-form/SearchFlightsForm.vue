@@ -14,6 +14,7 @@
   import { TRAVEL_CLASS_TRANSLATIONS_MAP } from '../../constants';
   import { useValidationSchema } from '~/entities/search-flights/model/useValidationSchema';
   import { useField, useForm } from 'vee-validate';
+  import { ROUTES } from '~/shared/constants';
 
   const menu = ref(false);
   const returnDate = ref<string | null>(null);
@@ -42,7 +43,7 @@
     loading: destinationLoading,
     handleAutocomplete: handleDestinationSearch,
   } = useAirports();
-  const { data: searchFlightParamsResponse, search } = useSearch();
+  const { data: searchFlightParamsResponse, loading: searching, search } = useSearch();
   const validationSchema = useValidationSchema();
   const { handleSubmit } = useForm({
     validationSchema,
@@ -124,8 +125,17 @@
     }, 0);
   };
 
-  watch(searchFlightParamsResponse, (response) => {
-    console.log(response);
+  watch(searchFlightParamsResponse, async (response) => {
+    if (response) {
+      const { searchId, resultsUrl } = response;
+      await navigateTo({
+        path: ROUTES.offers,
+        state: {
+          searchId,
+          resultsUrl,
+        },
+      });
+    }
   });
 </script>
 
@@ -149,7 +159,6 @@
         clearable
         @input="handleOriginSearch"
       />
-
       <VAutocomplete
         v-model="destinationCode"
         class="location-autocomplete form-input"
@@ -224,7 +233,7 @@
         />
       </VMenu>
     </div>
-    <VBtn type="submit" class="search-btn">{{ t('SEARCH') }}</VBtn>
+    <VBtn type="submit" class="search-btn" :loading="searching">{{ t('SEARCH') }}</VBtn>
   </form>
 </template>
 
